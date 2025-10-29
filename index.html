@@ -1,11 +1,73 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/Components/navbar.css">
+    <link rel="stylesheet" href="/Components/reset.css">
+    <link rel="stylesheet" href="/Components/create-ticket.css">
+    <link rel="stylesheet" href="/Components/welcome.css">
     <title>CortexIA</title>
 </head>
+
 <body>
-    
+    <nav class="navbar">
+        <div class="header">
+            <!-- Logo + Nome -->
+            <div class="logo-container">
+                <img src="/img/logo-cortexia-branca.png" alt="Logo" />
+                <h1>CortexIA</h1>
+            </div>
+
+            <!-- Botão e menu -->
+            <div class="menu-wrap">
+                <button id="menuToggle" class="config-btn">Configurações ☰</button>
+                <div id="menu" class="menu">
+                    <a href="#">Início</a>
+                    <a href="#">Chamados</a>
+                    <a href="#">Perfil</a>
+                    <a href="#">Sair</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    </header>
+    <main>
+        <div class="welcome">
+            <h1>Sistema de Suporte Técnico</h1>
+            <p>Descreva seu problema e a nossa
+                equipe vai ajudar a ser resolvido.</p>
+        </div>
+        <div class="create-ticket-container">
+            <div class="create-ticket">
+                <button id="btnNovoChamado">➕ Criar Novo Chamado</button>
+            </div>
+            <!-- MODAL DO CHAT DE SUPORTE -->
+  <div class="modal" id="chatModal">
+    <div class="modal-content">
+      <div class="chat-header">
+        Assistência Técnica - CortexIA
+        <span class="close" id="closeChat">&times;</span>
+      </div>
+
+      <div class="chat-body" id="chatBody">
+        <div class="message bot">
+          👋 Olá! Sou a assistente virtual da CortexIA. Como posso ajudar hoje?
+        </div>
+      </div>
+
+      <div class="chat-footer">
+        <input type="text" id="userInput" placeholder="Digite sua mensagem...">
+        <button id="sendBtn">Enviar</button>
+        <button id="callTechBtn" class="call-tech" style="display: none;">
+          👨‍🔧 Chamar Técnico
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+    </main>
 </body>
+<script src="script.js" ></script>
 </html>
