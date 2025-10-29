@@ -1,0 +1,121 @@
+:root {
+  --btn-dark: #333;
+  --btn-dark-hover: #555;
+}
+
+/* NAVBAR */
+.navbar .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15PX 100px;
+}
+
+/* LOGO + TEXTO */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 1s ease forwards;
+}
+
+.logo-container img {
+  height: 70px;
+}
+
+.logo-container h1 {
+  font-size: 28px;
+  color: #fff;
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* ANIMAÇÃO DO TÍTULO */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-15px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* BOTÃO DE CONFIGURAÇÃO */
+.config-btn {
+  background: var(--btn-dark);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  transition: background 0.3s;
+}
+
+.config-btn:hover, .config-btn:focus {
+  background: var(--btn-dark-hover);
+}
+
+/* MENU */
+.menu-wrap {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: var(--btn-dark);
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.menu.show {
+  display: flex;
+  animation: fadeDown 160ms ease;
+}
+
+.menu a {
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 14px;
+}
+
+.menu a:hover {
+  background: var(--btn-dark-hover);
+}
+
+/* ANIMAÇÃO DO MENU */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVO */
+@media (max-width: 420px) {
+  .config-btn {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+  
+  .menu {
+    min-width: 160px;
+  }
+
+  .navbar .header {
+    padding: 0 20px;
+  }
+
+  .logo-container h1 {
+    font-size: 20px;
+  }
+}
