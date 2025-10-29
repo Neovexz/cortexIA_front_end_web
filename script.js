@@ -83,3 +83,24 @@ callTechBtn.onclick = () => {
     adicionarMensagem("👨‍🔧 Um técnico foi acionado e entrará em contato em instantes.", 'bot');
   }, 2000);
 };
+
+
+// batao de navegacao do menu hamburguer
+
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('menuToggle');
+  const menu = document.getElementById('menu');
+
+  if (!toggle || !menu) return;
+
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menu.classList.toggle('show');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+      menu.classList.remove('show');
+    }
+  });
+});
