@@ -1,0 +1,85 @@
+// MODAL PARA CRIAR CHAMADO
+const btnNovoChamado = document.getElementById('btnNovoChamado');
+const modal = document.getElementById('chatModal');
+const closeBtn = document.getElementById('closeChat');
+const chatBody = document.getElementById('chatBody');
+const sendBtn = document.getElementById('sendBtn');
+const callTechBtn = document.getElementById('callTechBtn');
+const userInput = document.getElementById('userInput');
+
+const respostasIA = {
+  "internet": "Parece um problema de conexão. Já tentou reiniciar o roteador?",
+  "computador": "Você pode detalhar o problema do computador? Travamentos, lentidão ou erro específico?",
+  "impressora": "Verifique se a impressora está ligada e conectada corretamente.",
+  "login": "Tente redefinir sua senha clicando em 'Esqueci minha senha'."
+};
+
+// === Abrir / Fechar modal ===
+btnNovoChamado.onclick = () => modal.style.display = 'flex';
+closeBtn.onclick = () => modal.style.display = 'none';
+window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+
+// === Enviar mensagem ===
+sendBtn.onclick = enviarMensagem;
+userInput.addEventListener('keypress', e => { if (e.key === 'Enter') enviarMensagem(); });
+
+function enviarMensagem() {
+  const texto = userInput.value.trim();
+  if (!texto) return;
+
+  adicionarMensagem(texto, 'user');
+  userInput.value = '';
+
+  respostaIA(texto.toLowerCase());
+}
+
+function adicionarMensagem(texto, tipo) {
+  const msg = document.createElement('div');
+  msg.classList.add('message', tipo);
+  msg.textContent = texto;
+  chatBody.appendChild(msg);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+// === IA responde com animação de digitando ===
+function respostaIA(texto) {
+  let resposta = null;
+
+  // Oculta o botão do técnico a cada nova mensagem
+  callTechBtn.style.display = 'none';
+
+  for (let chave in respostasIA) {
+    if (texto.includes(chave)) {
+      resposta = respostasIA[chave];
+      break;
+    }
+  }
+
+  // Cria indicador de "digitando..."
+  const typing = document.createElement('div');
+  typing.classList.add('typing');
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  chatBody.appendChild(typing);
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  // Depois de 1.2s remove o typing e mostra a resposta
+  setTimeout(() => {
+    chatBody.removeChild(typing);
+
+    if (resposta) {
+      adicionarMensagem(resposta, 'bot');
+    } else {
+      adicionarMensagem("Desculpe 😕, não consegui resolver seu problema. Deseja chamar um técnico?", 'bot');
+      callTechBtn.style.display = 'inline-block';
+    }
+  }, 1200);
+}
+
+// === Botão "Chamar Técnico" ===
+callTechBtn.onclick = () => {
+  adicionarMensagem("Chamando um técnico humano...", 'bot');
+  callTechBtn.style.display = 'none';
+  setTimeout(() => {
+    adicionarMensagem("👨‍🔧 Um técnico foi acionado e entrará em contato em instantes.", 'bot');
+  }, 2000);
+};
