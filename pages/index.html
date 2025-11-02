@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/Components/reset.css">
     <link rel="stylesheet" href="/Components/create-ticket.css">
     <link rel="stylesheet" href="/Components/welcome.css">
+    <link rel="stylesheet" href="/Components/tabs.css">
     <title>CortexIA</title>
 </head>
 
@@ -25,7 +26,6 @@
                 <button id="menuToggle" class="config-btn">Configurações ☰</button>
                 <div id="menu" class="menu">
                     <a href="#">Início</a>
-                    <a href="#">Chamados</a>
                     <a href="#">Perfil</a>
                     <a href="#">Sair</a>
                 </div>
@@ -67,7 +67,29 @@
     </div>
   </div>
 </div>
+<nav class="nav">
+      <ul class="nav__list">
+        <li>
+          <button class="nav__button active" data-section="dashboard">
+            Dashboard
+          </button>
+        </li>
+        <li>
+          <button class="nav__button" data-section="chamados">
+            Chamados
+          </button>
+        </li>
+        <li>
+          <button class="nav__button" data-section="tecnicos">
+            Técnicos
+          </button>
+        </li>
+        <li>
+          <button class="nav__button" data-section="ia">IA Analytics</button>
+        </li>
+      </ul>
+    </nav>
     </main>
 </body>
-<script src="script.js" ></script>
+<script src="/script.js" ></script>
 </html>

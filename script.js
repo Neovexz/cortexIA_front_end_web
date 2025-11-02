@@ -104,3 +104,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+// tabs de navegacao entre secoes
+
+document.addEventListener("DOMContentLoaded", () => {
+  const buttons = document.querySelectorAll(".nav__button");
+  const sections = document.querySelectorAll(".section");
+
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+      // Atualiza o botão ativo
+      buttons.forEach(b => b.classList.remove("active"));
+      button.classList.add("active");
+
+      // Mostra a seção correspondente
+      const target = button.dataset.section;
+      sections.forEach(section => {
+        section.classList.toggle("active", section.id === target);
+      });
+    });
+  });
+});

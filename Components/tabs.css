@@ -1,0 +1,47 @@
+.section {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.section.active {
+  display: block;
+}
+
+.nav__list {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin: 0;
+  padding: 50px;
+  
+}
+
+.nav__button {
+  font-size: 14px;
+  color: #1a1a1a;             /* texto escuro */
+  background-color: #f2f2f2;  /* fundo claro */
+  border: none;                /* sem contorno */
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* sombra mais evidente */
+}
+
+/* Hover */
+.nav__button:hover {
+  background-color: #1a73e8;  /* azul vibrante */
+  color: #fff;                /* texto branco */
+  box-shadow: 0 8px 16px rgba(26, 115, 232, 0.5); /* sombra azul mais intensa */
+  transform: translateY(-2px); /* leve elevação */
+}
+
+/* Botão ativo */
+.nav__button.active {
+  background-color: #155ab6;  /* azul mais escuro */
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(21, 90, 182, 0.6); /* sombra forte e destacada */
+  transform: translateY(-2px);
+}
