@@ -1,0 +1,73 @@
+/* Cards */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  padding: 0px 350px;
+}
+
+.stat__card {
+  background: #ff0000;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat__card1 {
+  background: linear-gradient(120deg, #8e2de2 0%, #4a00e0 100%); /* Roxo profundo, mais sofisticado */
+}
+
+.stat__card2 {
+  background: linear-gradient(120deg, #ff6a00 0%, #ee0979 100%); /* Laranja para rosa intenso, vibrante e moderno */
+}
+
+.stat__card3 {
+  background: linear-gradient(120deg, #f7971e 0%, #ffd200 100%); /* Laranja para amarelo */
+}
+
+.stat__card4 {
+  background: linear-gradient(120deg, #11998e 0%, #38ef7d 100%); /* Verde refrescante */
+}
+
+.stat__card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.stat__title {
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.stat__value {
+  font-weight: bold;
+  margin: 10px;
+  color: #fff;
+  font-size: 24px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .nav__list {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .stats {
+    padding: 20px;
+  }
+}
