@@ -335,3 +335,52 @@ function filtrarChamados() {
 
 // Render inicial
 renderChamados(chamados);
+
+
+const tecnicos = [
+  { nome: "Carlos Tech" },
+  { nome: "João Tech" },
+  { nome: "Roberto Support" },
+];
+
+const cardsTecnicos = document.getElementById("cardsTecnicos");
+
+function contarChamadosPorTecnico(nomeTecnico) {
+  const emAndamento = chamados.filter(c => c.tecnico === nomeTecnico && c.status === "Em Andamento").length;
+  const resolvidos = chamados.filter(c => c.tecnico === nomeTecnico && c.status === "Resolvido").length;
+  const total = chamados.filter(c => c.tecnico === nomeTecnico).length;
+  return { emAndamento, resolvidos, total };
+}
+
+function renderTecnicos() {
+  if (!cardsTecnicos) return;
+  cardsTecnicos.innerHTML = "";
+  tecnicos.forEach(t => {
+    const { emAndamento, resolvidos, total } = contarChamadosPorTecnico(t.nome);
+    const card = document.createElement("div");
+    card.classList.add("card-tecnico");
+    card.innerHTML = `
+      <header>
+        <div class="icon">👤</div>
+        <div>
+          <h3>${t.nome}</h3>
+          <small>Técnico de Suporte</small>
+        </div>
+      </header>
+      <p>Em andamento: <strong>${emAndamento}</strong></p>
+      <p>Resolvidos: <strong>${resolvidos}</strong></p>
+      <p>Total: <strong>${total}</strong></p>
+    `;
+    cardsTecnicos.appendChild(card);
+  });
+}
+
+// Atualiza painel de técnicos sempre que os chamados forem renderizados
+const renderChamadosOriginal = renderChamados;
+renderChamados = function (lista) {
+  renderChamadosOriginal(lista);
+  renderTecnicos();
+};
+
+// Render inicial dos técnicos
+renderTecnicos();
