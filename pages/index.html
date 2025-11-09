@@ -2,72 +2,76 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/Components/navbar.css">
-    <link rel="stylesheet" href="/Components/reset.css">
-    <link rel="stylesheet" href="/Components/create-ticket.css">
-    <link rel="stylesheet" href="/Components/welcome.css">
-    <link rel="stylesheet" href="/Components/tabs.css">
-    <title>CortexIA</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/Components/navbar.css">
+  <link rel="stylesheet" href="/Components/reset.css">
+  <link rel="stylesheet" href="/Components/create-ticket.css">
+  <link rel="stylesheet" href="/Components/welcome.css">
+  <link rel="stylesheet" href="/Components/tabs.css">
+  <link rel="stylesheet" href="/Components/cards.css">
+  <link rel="stylesheet" href="/Components/dashboard.css">
+  <link rel="stylesheet" href="/Components/chamados.css">
+
+  <title>CortexIA</title>
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="header">
-            <!-- Logo + Nome -->
-            <div class="logo-container">
-                <img src="/img/logo-cortexia-branca.png" alt="Logo" />
-                <h1>CortexIA</h1>
-            </div>
-
-            <!-- Botão e menu -->
-            <div class="menu-wrap">
-                <button id="menuToggle" class="config-btn">Configurações ☰</button>
-                <div id="menu" class="menu">
-                    <a href="#">Início</a>
-                    <a href="#">Perfil</a>
-                    <a href="#">Sair</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-    </header>
-    <main>
-        <div class="welcome">
-            <h1>Sistema de Suporte Técnico</h1>
-            <p>Descreva seu problema e a nossa
-                equipe vai ajudar a ser resolvido.</p>
-        </div>
-        <div class="create-ticket-container">
-            <div class="create-ticket">
-                <button id="btnNovoChamado">➕ Criar Novo Chamado</button>
-            </div>
-            <!-- MODAL DO CHAT DE SUPORTE -->
-  <div class="modal" id="chatModal">
-    <div class="modal-content">
-      <div class="chat-header">
-        Assistência Técnica - CortexIA
-        <span class="close" id="closeChat">&times;</span>
+  <nav class="navbar">
+    <div class="header">
+      <!-- Logo + Nome -->
+      <div class="logo-container">
+        <img src="/img/logo-cortexia-branca.png" alt="Logo" />
+        <h1>CortexIA</h1>
       </div>
 
-      <div class="chat-body" id="chatBody">
-        <div class="message bot">
-          👋 Olá! Sou a assistente virtual da CortexIA. Como posso ajudar hoje?
+      <!-- Botão e menu -->
+      <div class="menu-wrap">
+        <button id="menuToggle" class="config-btn">Configurações ☰</button>
+        <div id="menu" class="menu">
+          <a href="#">Início</a>
+          <a href="#">Perfil</a>
+          <a href="#">Sair</a>
         </div>
-      </div>
-
-      <div class="chat-footer">
-        <input type="text" id="userInput" placeholder="Digite sua mensagem...">
-        <button id="sendBtn">Enviar</button>
-        <button id="callTechBtn" class="call-tech" style="display: none;">
-          👨‍🔧 Chamar Técnico
-        </button>
       </div>
     </div>
-  </div>
-</div>
-<nav class="nav">
+  </nav>
+  </header>
+  <main>
+    <div class="welcome">
+      <h1>Sistema de Suporte Técnico</h1>
+      <p>Descreva seu problema e a nossa
+        equipe vai ajudar a ser resolvido.</p>
+    </div>
+    <div class="create-ticket-container">
+      <div class="create-ticket">
+        <button id="btnNovoChamado">➕ Criar Novo Chamado</button>
+      </div>
+      <!-- MODAL DO CHAT DE SUPORTE -->
+      <div class="modal" id="chatModal">
+        <div class="modal-content">
+          <div class="chat-header">
+            Assistência Técnica - CortexIA
+            <span class="close" id="closeChat">&times;</span>
+          </div>
+
+          <div class="chat-body" id="chatBody">
+            <div class="message bot">
+              👋 Olá! Sou a assistente virtual da CortexIA. Como posso ajudar hoje?
+            </div>
+          </div>
+
+          <div class="chat-footer">
+            <input type="text" id="userInput" placeholder="Digite sua mensagem...">
+            <button id="sendBtn">Enviar</button>
+            <button id="callTechBtn" class="call-tech" style="display: none;">
+              👨‍🔧 Chamar Técnico
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="nav">
       <ul class="nav__list">
         <li>
           <button class="nav__button active" data-section="dashboard">
@@ -89,7 +93,81 @@
         </li>
       </ul>
     </nav>
-    </main>
+    <div class="main">
+      <!-- botoes principais -->
+      <section id="dashboard" class="section active">
+        <div class="stats">
+          <div class="stat__card stat__card1">
+            <h3 class="stat__title">Total de Chamados</h3>
+            <p class="stat__value" id="total">0</p>
+          </div>
+
+          <div class="stat__card stat__card2">
+            <h3 class="stat__title">Abertos</h3>
+            <p class="stat__value" id="abertos">0</p>
+          </div>
+
+          <div class="stat__card stat__card3">
+            <h3 class="stat__title">Em andamento</h3>
+            <p class="stat__value" id="andamento">0</p>
+          </div>
+
+          <div class="stat__card stat__card4">
+            <h3 class="stat__title">Resolvidos</h3>
+            <p class="stat__value" id="resolvidos">0</p>
+          </div>
+        </div>
+      </section>
+      <!-- dashboard -->
+    </div>
+    <section id="dashboard" class="section active chamados">
+      <div class="container-dashboard">
+        <section class="tickets">
+          <header class="tickets-header">
+            <h2>Chamados Recentes</h2>
+            <p>Últimos chamados criados no sistema</p>
+          </header>
+
+          <ul class="ticket-list" id="ticketList"></ul>
+        </section>
+      </div>
+    </section>
+
+
+    <section id="chamados" class="section">
+      <div class="container-chamados">
+
+        <section class="filtros" aria-label="Filtros de busca e seleção">
+          <form id="formFiltros" class="filtros-form" role="search">
+            <input type="search" id="busca" placeholder="Buscar chamados..." aria-label="Buscar chamados" />
+            <select id="filtroStatus" aria-label="Filtrar por status">
+              <option value="">Todos os Status</option>
+              <option value="Aberto">Aberto</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Resolvido">Resolvido</option>
+            </select>
+            <select id="filtroPrioridade" aria-label="Filtrar por prioridade">
+              <option value="">Todas as Prioridades</option>
+              <option value="Alta">Alta</option>
+              <option value="Média">Média</option>
+              <option value="Baixa">Baixa</option>
+            </select>
+            <select id="filtroCategoria" aria-label="Filtrar por categoria">
+              <option value="">Todas as Categorias</option>
+              <option value="Rede">Rede</option>
+              <option value="Software">Software</option>
+              <option value="Hardware">Hardware</option>
+            </select>
+          </form>
+
+          <section class="chamados" aria-label="Lista de chamados recentes">
+            <ul id="listaChamados"></ul>
+          </section>
+      </div>
+    </section>
+
+  </main>
 </body>
-<script src="/script.js" ></script>
+<script src="/script.js"></script>
+
 </html>
