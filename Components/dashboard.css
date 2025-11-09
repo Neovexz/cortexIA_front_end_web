@@ -1,0 +1,180 @@
+:root {
+  --status-open: #f87171;
+  --status-progress: #facc15;
+  --status-resolved: #4ade80;
+
+  --priority-high: #f97316;
+  --priority-medium: #3b82f6;
+  --priority-low: #22c55e;
+
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --bg-light: #f9fafb;
+  --bg-card: #ffffff;
+  --border-color: #e5e7eb;
+  --border-radius: 8px;
+}
+
+.container-dashboard {
+  margin: 0 auto;
+  max-width: 800px;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.tickets {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tickets-header h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.tickets-header p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.ticket-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ticket {
+  background-color: var(--bg-light);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.2s ease;
+}
+
+.ticket:hover {
+  background-color: #f1f5f9;
+}
+
+.ticket strong {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.ticket small {
+  color: var(--text-secondary);
+}
+
+.ticket-badges {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+/* Status */
+.badge.aberto {
+  background-color: var(--status-open);
+}
+.badge.emandamento {
+  background-color: var(--status-progress);
+  color: #000;
+}
+.badge.resolvido {
+  background-color: var(--status-resolved);
+  color: #000;
+}
+
+/* Priority */
+.badge.alto {
+  background-color: var(--priority-high);
+}
+.badge.medio {
+  background-color: var(--priority-medium);
+}
+.badge.baixo {
+  background-color: var(--priority-low);
+}
+
+/* ================================
+   📱 Responsividade para tablets
+   ================================ */
+@media (max-width: 768px) {
+  .container-dashboard {
+    max-width: 95%;
+    padding: 16px;
+  }
+
+  .tickets {
+    padding: 1.25rem;
+  }
+
+  .tickets-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .ticket strong {
+    font-size: 0.95rem;
+  }
+
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+/* ================================
+   📱 Responsividade para celulares
+   ================================ */
+@media (max-width: 480px) {
+  .container-dashboard {
+    padding: 12px;
+  }
+
+  .tickets {
+    padding: 1rem;
+  }
+
+  .tickets-header h2 {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .tickets-header p {
+    text-align: center;
+    font-size: 0.8rem;
+  }
+
+  .ticket {
+    padding: 0.8rem;
+  }
+
+  .ticket strong {
+    font-size: 0.9rem;
+  }
+
+  .ticket-badges {
+    flex-direction: column; /* empilha os badges */
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+  }
+}

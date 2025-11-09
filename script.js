@@ -125,3 +125,71 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+
+// tiickets do dashboard
+
+
+const tickets = [
+  {
+    id: "#001",
+    title: "Internet connection issue",
+    user: "João Silva",
+    status: "Aberto",
+    priority: "Alto",
+  },
+  {
+    id: "#002",
+    title: "Excel won't open after update",
+    user: "Maria Santos",
+    status: "Em Andamento",
+    priority: "Medio",
+  },
+  {
+    id: "#003",
+    title: "Printer not printing",
+    user: "Pedro Costa",
+    status: "Resolvido",
+    priority: "Baixo",
+  },
+  {
+    id: "#004",
+    title: "Email not syncing",
+    user: "Ana Oliveira",
+    status: "Aberto",
+    priority: "Medio",
+  },
+  {
+    id: "#005",
+    title: "Monitor flickering screen",
+    user: "Roberto Lima",
+    status: "Em Andamento",
+    priority: "Alto",
+  },
+];
+
+const ticketList = document.getElementById("ticketList");
+
+tickets.forEach((t) => {
+  const li = document.createElement("li");
+  li.classList.add("ticket");
+
+  const statusClass = t.status
+    .toLowerCase()
+    .replace(" ", "");
+
+  const priorityClass = t.priority.toLowerCase();
+
+  li.innerHTML = `
+    <div>
+      <strong>${t.id} - ${t.title}</strong><br>
+      <small>${t.user}</small>
+    </div>
+    <div class="ticket-badges">
+      <span class="badge ${statusClass.includes("progress") ? "progress" : statusClass}">${t.status}</span>
+      <span class="badge ${priorityClass}">${t.priority}</span>
+    </div>
+  `;
+
+  ticketList.appendChild(li);
+});

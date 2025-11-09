@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/Components/welcome.css">
     <link rel="stylesheet" href="/Components/tabs.css">
     <link rel="stylesheet" href="/Components/cards.css">
+    <link rel="stylesheet" href="/Components/dashboard.css">
     <title>CortexIA</title>
 </head>
 
@@ -91,31 +92,72 @@
       </ul>
     </nav>
 <div class="main">  
-  <section id="dashboard" class="section active">
-        <div class="stats">
-          <div class="stat__card stat__card1">
-            <h3 class="stat__title">Total de Chamados</h3>
-            <p class="stat__value">5</p>
-          </div>
+  <!-- botoes principais -->
+<section id="dashboard" class="section active">
+  <div class="stats">
+    <div class="stat__card stat__card1">
+      <h3 class="stat__title">Total de Chamados</h3>
+      <p class="stat__value" id="total">0</p>
+    </div>
 
-          <div class="stat__card stat__card2">
-            <h3 class="stat__title">Abertos</h3>
-            <p class="stat__value">2</p>
-          </div>
+    <div class="stat__card stat__card2">
+      <h3 class="stat__title">Abertos</h3>
+      <p class="stat__value" id="abertos">0</p>
+    </div>
 
-          <div class="stat__card stat__card3">
-            <h3 class="stat__title">Em andamento</h3>
-            <p class="stat__value">2</p>
-          </div>
+    <div class="stat__card stat__card3">
+      <h3 class="stat__title">Em andamento</h3>
+      <p class="stat__value" id="andamento">0</p>
+    </div>
 
-          <div class="stat__card stat__card4">
-            <h3 class="stat__title">Resolvidos</h3>
-            <p class="stat__value">1</p>
-          </div>
+    <div class="stat__card stat__card4">
+      <h3 class="stat__title">Resolvidos</h3>
+      <p class="stat__value" id="resolvidos">0</p>
+    </div>
+  </div>
+</section>
+<!-- dashboard -->
+</div>
+    <section id="dashboard" class="section active chamados">
+        <div class="container-dashboard">
+          <section class="tickets">
+            <header class="tickets-header">
+              <h2>Chamados Recentes</h2>
+              <p>Últimos chamados criados no sistema</p>
+            </header>
+
+            <ul class="ticket-list" id="ticketList"></ul>
+          </section>
         </div>
       </section>
-</div>
-    
+
+
+      <section id="chamados" class="section">
+        <div class="container-chamados">
+
+          <section class="filtros" aria-label="Filtros de busca e seleção">
+            <form id="formFiltros" class="filtros-form" role="search">
+              <input type="search" id="busca" placeholder="Buscar chamados..." aria-label="Buscar chamados" />
+              <select id="filtroStatus" aria-label="Filtrar por status">
+                <option value="">Todos os Status</option>
+                <option value="Aberto">Aberto</option>
+                <option value="Em Andamento">Em Andamento</option>
+                <option value="Resolvido">Resolvido</option>
+              </select>
+              <select id="filtroPrioridade" aria-label="Filtrar por prioridade">
+                <option value="">Todas as Prioridades</option>
+                <option value="Alta">Alta</option>
+                <option value="Média">Média</option>
+                <option value="Baixa">Baixa</option>
+              </select>
+              <select id="filtroCategoria" aria-label="Filtrar por categoria">
+                <option value="">Todas as Categorias</option>
+                <option value="Rede">Rede</option>
+                <option value="Software">Software</option>
+                <option value="Hardware">Hardware</option>
+              </select>
+            </form>
+          </section>
     </main>
 </body>
 <script src="/script.js" ></script>
