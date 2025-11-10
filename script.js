@@ -384,3 +384,21 @@ renderChamados = function (lista) {
 
 // Render inicial dos técnicos
 renderTecnicos();
+
+// ia
+
+document.addEventListener('DOMContentLoaded', () => {
+  const badges = document.querySelectorAll('.badge-ia');
+
+  badges.forEach(button => {
+    button.addEventListener('click', () => {
+      const isActive = button.getAttribute('data-state') === 'active';
+      const newState = isActive ? 'testing' : 'active';
+      button.setAttribute('data-state', newState);
+      button.setAttribute('aria-pressed', String(!isActive));
+      button.textContent = newState === 'active' ? 'Ativo' : 'Em Teste';
+    });
+  });
+});
+
+

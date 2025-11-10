@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="/Components/dashboard.css">
   <link rel="stylesheet" href="/Components/chamados.css">
   <link rel="stylesheet" href="/Components/tecnicos.css">
+  <link rel="stylesheet" href="/Components/ia.css">
 
   <title>CortexIA</title>
 </head>
@@ -31,7 +32,7 @@
         <button id="menuToggle" class="config-btn">Configurações ☰</button>
         <div id="menu" class="menu">
           <a href="#">Início</a>
-          <a href="#">Perfil</a>
+          <a href="/pages/profile.html">Perfil</a>
           <a href="#">Sair</a>
         </div>
       </div>
@@ -173,6 +174,69 @@
           <div id="cardsTecnicos" class="cards-tecnicos"></div>
         </div>
       </section>
+            <section id="ia" class="section">
+        <div class="container-ia">
+          <section class="card-ia" aria-labelledby="ia-title">
+            <div class="card-header-ia">
+              <h2 id="ia-title">Análise de IA</h2>
+              <p>Insights gerados pela inteligência artificial</p>
+            </div>
+
+            <div class="insights">
+              <article class="insight insight--pattern" aria-labelledby="p1-title">
+                <h3 id="p1-title">Padrões Identificados</h3>
+                <p>70% dos problemas de rede são resolvidos reiniciando o roteador</p>
+              </article>
+
+              <article class="insight insight--suggest" aria-labelledby="p2-title">
+                <h3 id="p2-title">Sugestão de Melhoria</h3>
+                <p>Criar FAQ automático para problemas recorrentes de impressora</p>
+              </article>
+
+              <article class="insight insight--alert" aria-labelledby="p3-title">
+                <h3 id="p3-title">Alerta de Tendência</h3>
+                <p>Aumento de 30% em problemas de software esta semana</p>
+              </article>
+            </div>
+          </section>
+
+          <!-- Automações Ativas -->
+          <section class="card-ia" aria-labelledby="auto-title">
+            <div class="card-header-ia">
+              <h2 id="auto-title">Automações Ativas</h2>
+              <p>Recursos de IA em funcionamento</p>
+            </div>
+
+            <aside>
+              <ul class="automation-list" role="list">
+                <li class="automation-item">
+                  <span>Classificação Automática</span>
+                  <button class="badge-ia" data-state="active" aria-pressed="true">Ativo</button>
+                </li>
+
+                <li class="automation-item">
+                  <span>Sugestões de Solução</span>
+                  <button class="badge-ia" data-state="active" aria-pressed="true">Ativo</button>
+                </li>
+
+                <li class="automation-item">
+                  <span>Priorização Inteligente</span>
+                  <button class="badge-ia" data-state="active" aria-pressed="true">Ativo</button>
+                </li>
+
+                <li class="automation-item">
+                  <span>Análise de Sentimento</span>
+                  <button class="badge-ia" data-state="testing" aria-pressed="false">Em Teste</button>
+                </li>
+              </ul>
+            </aside>
+          </section>
+
+
+        </div>
+      </section>
+    </div>
+
   </main>
 </body>
 <script src="/script.js"></script>

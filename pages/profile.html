@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil do Usuário</title>
+  <link rel="stylesheet" href="/Components/profile.css">
+</head>
+<body>
+
+  <!-- Botão fixo no topo -->
+  <button id="voltarMenu" class="menu-top-btn">⬅ Voltar ao menu</button>
+
+  <div class="container">
+    <!-- CARTÃO DE PERFIL -->
+    <aside class="perfil-card">
+      <div class="foto-container">
+        <img id="fotoPerfil" src="" alt="" class="foto-perfil">
+        <div class="foto-acoes">
+          <label for="uploadFoto" class="upload-btn">📷 Adicionar</label>
+          <input type="file" id="uploadFoto" accept="image/*" hidden>
+          <button id="removerFoto" class="remove-btn">🗑 Remover</button>
+        </div>
+      </div>
+
+      <h2>Ruanzin</h2>
+      <p>ruancod10@gmail.com</p>
+
+      <div class="perfil-buttons">
+        <span class="tag">Administrador</span>
+        <button id="sairBtn" class="logout-btn">⏻ Sair</button>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="conteudo">
+      <div class="abas">
+        <button class="aba ativa" data-alvo="pessoal">Pessoal</button>
+        <button class="aba" data-alvo="endereco">Endereço</button>
+        <button class="aba" data-alvo="profissional">Profissional</button>
+        <button class="aba" data-alvo="social">Social</button>
+      </div>
+
+      <section id="pessoal" class="aba-conteudo ativo">
+        <h3>Informações Pessoais</h3>
+        <label>Nome completo</label>
+        <input type="text" placeholder="Digite seu nome completo">
+        <label>Telefone</label>
+        <input type="number" placeholder="Digite seu Numero de telefone">
+        <label>Email</label>
+        <input type="text" placeholder="Digite seu email">
+        <label>Data de nascimento</label>
+        <input type="date">
+        <button class="salvar-btn">Salvar alterações</button>
+      </section>
+
+      <section id="endereco" class="aba-conteudo">
+        <h3>Endereço</h3>
+        <label>Rua</label>
+        <input type="text" placeholder="Digite sua rua,complemento e número">
+        <label>Cidade</label>
+        <input type="text" placeholder="Digite sua cidade">
+         <label>Estado</label>
+        <input type="text" placeholder="Digite seu estado">
+         <label>Cep</label>
+        <input type="text" placeholder="00000-000">
+        <button class="salvar-btn">Salvar alterações</button>
+      </section>
+
+      <section id="profissional" class="aba-conteudo">
+        <h3>Informações Profissionais</h3>
+        <label>Cargo</label>
+        <input type="text" placeholder="Digite seu cargo">
+        <label>Empresa</label>
+        <input type="text" placeholder="Digite o nome da empresa">
+        <button class="salvar-btn">Salvar alterações</button>
+      </section>
+
+      <section id="social" class="aba-conteudo">
+        <h3>Redes Sociais</h3>
+        <label>Instagram</label>
+        <input type="text" placeholder="@seuusuario">
+        <label>LinkedIn</label>
+        <input type="text" placeholder="linkedin.com/in/usuario">
+        <button class="salvar-btn">Salvar alterações</button>
+      </section>
+    </main>
+  </div>
+
+  <script src="/profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f4f4f9;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:root {
+  /* Paleta baseada na interface do CortexIA */
+  --roxo: #d500f9;
+  --azul: #2979ff;
+  --laranja: #ff6d00;
+
+  /* Tons derivados e neutros */
+  --roxo-escuro: #8e24aa;
+  --azul-escuro: #1565c0;
+  --laranja-escuro: #ef6c00;
+  --bg-claro: #f6f7fb;
+  --card-bg: #ffffff;
+  --texto: #1f1f2e;
+  --texto-suave: #555;
+  --borda: #e0e0e0;
+  --sombra: rgba(0, 0, 0, 0.1);
+}
+
+/* BOTÃO NO TOPO */
+.menu-top-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(90deg, var(--roxo), var(--azul), var(--laranja));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.menu-top-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+/* CONTAINER GERAL */
+.container {
+  display: flex;
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 0 20px var(--sombra);
+  overflow: hidden;
+  width: 900px;
+  max-width: 95%;
+}
+
+/* PERFIL */
+.perfil-card {
+  background: var(--bg-claro);
+  padding: 30px;
+  width: 300px;
+  text-align: center;
+  border-right: 1px solid var(--borda);
+}
+
+.foto-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.foto-perfil {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 3px solid #444;
+  overflow: hidden; /* Impede vazamento do gradiente */
+  margin-bottom: 10px;
+}
+
+.foto-perfil::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--roxo), var(--azul));
+  z-index: 0;
+}
+
+.foto-perfil img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.foto-acoes {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* Botões de ação */
+.upload-btn,
+.remove-btn {
+  background: var(--azul);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.upload-btn:hover,
+.remove-btn:hover {
+  background: var(--roxo);
+}
+
+h2 {
+  margin-top: 15px;
+  margin-bottom: 5px;
+  color: var(--texto);
+}
+
+p {
+  color: var(--texto-suave);
+  margin: 10px;
+}
+
+.tag {
+  background: linear-gradient(90deg, var(--roxo), var(--azul));
+  color: white;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: var(--texto);
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 10px;
+  transition: 0.3s;
+}
+.logout-btn:hover {
+  color: var(--laranja);
+}
+
+/* CONTEÚDO PRINCIPAL */
+.conteudo {
+  flex: 1;
+  padding: 30px;
+}
+
+.abas {
+  display: flex;
+  border-bottom: 2px solid #eee;
+}
+
+.aba {
+  background: none;
+  border: none;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+  transition: 0.3s;
+}
+
+.aba:hover {
+  color: var(--azul);
+}
+
+.aba.ativa {
+  border-bottom: 3px solid var(--azul);
+  color: var(--azul);
+}
+
+/* CONTEÚDO DAS ABAS */
+.aba-conteudo {
+  display: none;
+  margin-top: 25px;
+}
+.aba-conteudo.ativo {
+  display: block;
+}
+
+/* CAMPOS */
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--borda);
+  margin-bottom: 15px;
+  outline: none;
+  transition: 0.2s;
+}
+input:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 5px rgba(41, 121, 255, 0.3);
+}
+
+/* BOTÃO SALVAR */
+.salvar-btn {
+  background: linear-gradient(90deg, var(--roxo), var(--azul));
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 600;
+}
+.salvar-btn:hover {
+  filter: brightness(1.15);
+  transform: translateY(-2px);
+}

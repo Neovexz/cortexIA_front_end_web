@@ -1,0 +1,129 @@
+:root{
+  --bg: #f6f9fb;
+  --card: #ffffff;
+  --muted: #64748b;
+  --border: #e6eef6;
+  --blue: #3b82f6;
+  --green: #16a34a;
+  --orange: #f59e0b;
+  --radius: 10px;
+}
+
+.container-ia{
+  display:grid;
+  grid-template-columns: 1fr 360px;
+  gap:20px;
+  align-items:start;
+}
+
+.card-ia{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow: 0 6px 18px rgba(15,23,42,0.06);
+  padding:18px;
+}
+
+.card-header-ia{
+  margin:0 0 8px 0;
+}
+
+.card-header-ia h2{
+  font-size:1.05rem;
+  margin:0;
+  display:flex;
+  gap:.6rem;
+  align-items:center;
+}
+
+.card-header-ia p{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:.88rem;
+}
+
+/* Blocos de insights */
+.insights{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-top:8px;
+}
+
+.insight{
+  padding:14px;
+  border-radius:8px;
+  background:#f8fafc;
+  border-left:6px solid var(--blue);
+}
+
+.insight h3{
+  margin:0 0 6px 0;
+  font-size:.98rem;
+}
+
+.insight p{
+  margin:0;
+  font-size:.92rem;
+  color:#14263b;
+}
+
+.insight--pattern{
+  background:#eef4ff;
+  border-left-color:var(--blue);
+}
+.insight--suggest{
+  background:#ecfdf5;
+  border-left-color:var(--green);
+}
+.insight--alert{
+  background:#fff7ed;
+  border-left-color:var(--orange);
+}
+
+/* Lista de automações */
+.automation-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.automation-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:8px;
+  background:#fbfdff;
+  border:1px solid var(--border);
+  font-size:.95rem;
+}
+
+/* Botões de status */
+.badge-ia{
+  min-width:76px;
+  padding:6px 10px;
+  border-radius:999px;
+  border:0;
+  font-weight:600;
+  cursor:pointer;
+  color:#fff;
+  font-size:.82rem;
+}
+
+.badge-ia[data-state="active"]{ background:var(--green); }
+.badge-ia[data-state="testing"]{ background:var(--orange); }
+
+.badge-ia:focus{
+  outline:3px solid rgba(59,130,246,0.18);
+  outline-offset:3px;
+}
+
+/* Responsividade */
+@media (max-width:880px){
+  .container-ia{ grid-template-columns: 1fr; }
+  .card-ia{ padding:14px; }
+}
