@@ -1,0 +1,129 @@
+:root {
+  --roxo: #d500f9;
+  --azul: #2979ff;
+  --laranja: #ff6d00;
+  --branco: #ffffff;
+  --texto: #1f1f2e;
+  --cinza: #f4f4f9;
+  --sombra: rgba(0, 0, 0, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+/* 🔹 Fundo minimalista */
+body {
+  background: var(--cinza);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 🔹 Card principal */
+.container {
+  position: relative;
+  background: var(--branco);
+  width: 400px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px var(--sombra);
+  overflow: hidden;
+  animation: fadeIn 0.8s ease;
+  z-index: 1;
+}
+
+.tabs {
+  display: flex;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 15px;
+  cursor: pointer;
+  font-weight: 600;
+  background: var(--cinza);
+  color: var(--texto);
+  transition: 0.3s;
+}
+
+.tab.active {
+  background: linear-gradient(90deg, var(--roxo), var(--azul));
+  color: var(--branco);
+}
+
+.form {
+  padding: 30px;
+  display: none;
+  animation: slideIn 0.5s ease;
+}
+
+.form.active {
+  display: block;
+}
+
+.form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--texto);
+}
+
+.form input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.form input:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 6px rgba(41, 121, 255, 0.3);
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--roxo), var(--azul));
+  color: var(--branco);
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.switch-text {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.switch-text span {
+  color: var(--azul);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}

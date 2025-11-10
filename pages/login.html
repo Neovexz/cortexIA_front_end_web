@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CortexIA - Login</title>
+  <link rel="stylesheet" href="/Components/login.css">
+</head>
+<body>
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" id="loginTab">Login</div>
+      <div class="tab" id="registerTab">Cadastro</div>
+    </div>
+
+    <div class="form active" id="loginForm">
+      <h2>Bem-vindo de volta 👋</h2>
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Senha" required />
+      <button class="btn" onclick="login()">Entrar</button>
+      <div class="switch-text">
+        Não tem conta? <span onclick="switchToRegister()">Cadastre-se</span>
+      </div>
+    </div>
+
+    <div class="form" id="registerForm">
+      <h2>Criar Conta 🚀</h2>
+      <input type="text" id="registerName" placeholder="Nome completo" required />
+      <input type="email" id="registerEmail" placeholder="Email" required />
+      <input type="password" id="registerPassword" placeholder="Senha" required />
+      <button class="btn" onclick="register()">Cadastrar</button>
+      <div class="switch-text">
+        Já tem uma conta? <span onclick="switchToLogin()">Entrar</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="/scripts/Login.js"></script>
+</body>
+</html>
+
