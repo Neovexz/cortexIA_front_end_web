@@ -1,3 +1,4 @@
+// Seletores
 const loginTab = document.getElementById('loginTab');
 const registerTab = document.getElementById('registerTab');
 const loginForm = document.getElementById('loginForm');
@@ -6,6 +7,7 @@ const registerForm = document.getElementById('registerForm');
 loginTab.addEventListener('click', switchToLogin);
 registerTab.addEventListener('click', switchToRegister);
 
+// Trocar abas
 function switchToLogin() {
   loginTab.classList.add('active');
   registerTab.classList.remove('active');
@@ -20,46 +22,86 @@ function switchToRegister() {
   loginForm.classList.remove('active');
 }
 
-function register() {
+/* ==========================================
+   🔥 POPUP ESTILIZADO (OPÇÃO C)
+========================================== */
+function showPopup(title, message, isSuccess = false) {
+  const popup = document.getElementById("customPopup");
+  const titleEl = document.getElementById("popupTitle");
+  const msgEl = document.getElementById("popupMessage");
+
+  titleEl.innerText = title;
+  msgEl.innerText = message;
+
+  titleEl.style.color = isSuccess ? "#28a745" : "#dc3545";
+
+  popup.classList.remove("hidden");
+}
+
+function closePopup() {
+  document.getElementById("customPopup").classList.add("hidden");
+}
+
+// ======================================
+// CADASTRO (SIMULAÇÃO – SEM BACKEND)
+// ======================================
+async function register() {
   const nome = document.getElementById('registerName').value.trim();
   const email = document.getElementById('registerEmail').value.trim();
   const senha = document.getElementById('registerPassword').value;
 
   if (!nome || !email || !senha) {
-    alert("Preencha todos os campos!");
+    showPopup("Erro!", "Preencha todos os campos!");
     return;
   }
 
-  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+  localStorage.setItem("fakeUser", JSON.stringify({ nome, email, senha }));
 
-  // verifica se email já existe
-  if (usuarios.some(u => u.email === email)) {
-    alert("Este email já está cadastrado!");
-    return;
-  }
+  showPopup("Sucesso!", "Cadastro realizado!", true);
 
-  usuarios.push({ nome, email, senha });
-  localStorage.setItem("usuarios", JSON.stringify(usuarios));
-  alert("Cadastro concluído com sucesso!");
-  switchToLogin();
+  setTimeout(() => {
+    switchToLogin();
+    closePopup();
+  }, 1200);
 }
 
-function login() {
+// ======================================
+// LOGIN (VALIDA PELO LOCALSTORAGE)
+// ======================================
+async function login() {
   const email = document.getElementById('loginEmail').value.trim();
   const senha = document.getElementById('loginPassword').value;
 
   if (!email || !senha) {
-    alert("Preencha todos os campos!");
+    showPopup("Erro!", "Preencha todos os campos!");
     return;
   }
 
-  const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-  const usuario = usuarios.find(u => u.email === email && u.senha === senha);
+  const data = JSON.parse(localStorage.getItem("fakeUser"));
 
-  if (usuario) {
-    localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
-    window.location.href = "index.html";
-  } else {
-    alert("Email ou senha incorretos!");
+  if (!data) {
+    showPopup("Erro!", "Nenhuma conta cadastrada!");
+    return;
   }
+
+  if (data.email !== email || data.senha !== senha) {
+    showPopup("Erro!", "Email ou senha incorretos!");
+    return;
+  }
+
+  localStorage.setItem("usuarioLogado", JSON.stringify(data));
+
+  showPopup("Sucesso!", "Login realizado! Redirecionando...", true);
+
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 1000);
 }
+
+// ENTER AUTOMÁTICO
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    if (loginForm.classList.contains("active")) login();
+    if (registerForm.classList.contains("active")) register();
+  }
+});

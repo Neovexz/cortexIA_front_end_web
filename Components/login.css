@@ -15,7 +15,7 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* 🔹 Fundo minimalista */
+/* Fundo */
 body {
   background: var(--cinza);
   height: 100vh;
@@ -26,7 +26,7 @@ body {
   overflow: hidden;
 }
 
-/* 🔹 Card principal */
+/* Card */
 .container {
   position: relative;
   background: var(--branco);
@@ -126,4 +126,75 @@ body {
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===========================
+   🔥 POPUP SUPER CHAMATIVO
+=========================== */
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+}
+
+.popup.hidden {
+  display: none;
+}
+
+.popup-content {
+  background: #fff;
+  padding: 25px;
+  width: 90%;
+  max-width: 360px;
+  text-align: center;
+  border-radius: 16px;
+  animation: popIn 0.35s ease-out;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+}
+
+#popupTitle {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+#popupMessage {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+#popupButton {
+  background: linear-gradient(45deg, #007bff, #00c4ff);
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+#popupButton:hover {
+  transform: scale(1.05);
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
