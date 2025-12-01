@@ -4,7 +4,7 @@
 let chamados = []; 
 
 // =========================================================================
-// VARIÁVEIS DO DOM (Modal e Navegação)
+// VARIÁVEIS DO DOM E CONSTANTES
 // =========================================================================
 const btnNovoChamado = document.getElementById('btnNovoChamado');
 const modal = document.getElementById('chatModal');
@@ -30,16 +30,17 @@ const tecnicos = [
     { nome: "Roberto Support" },
 ];
 
-// =========================================================================
-// FUNÇÕES DE UTILIDADE E IA
-// =========================================================================
-
 const respostasIA = {
   "internet": "Parece um problema de conexão. Já tentou reiniciar o roteador?",
   "computador": "Você pode detalhar o problema do computador? Travamentos, lentidão ou erro específico?",
   "impressora": "Verifique se a impressora está ligada e conectada corretamente.",
   "login": "Tente redefinir sua senha clicando em 'Esqueci minha senha'."
 };
+
+
+// =========================================================================
+// FUNÇÕES DE UTILIDADE E CHATBOT
+// =========================================================================
 
 // === Abrir / Fechar modal ===
 btnNovoChamado.onclick = () => modal.style.display = 'flex';
@@ -98,14 +99,57 @@ function respostaIA(texto) {
   }, 1200);
 }
 
-// === Botão "Chamar Técnico" ===
+// SIMULA CRIAÇÃO DO CHAMADO NO BACK-END
+async function createTicketAPI(problemDescription) {
+    // 1. URL DA SUA API PARA CRIAR UM CHAMADO (POST)
+    const CREATE_TICKET_URL = 'http://localhost:3000/api/chamados/criar'; 
+
+    const novoChamado = {
+        titulo: problemDescription.length > 50 ? problemDescription.substring(0, 50) + "..." : problemDescription,
+        descricao: "Chamado gerado via Chatbot. Descrição inicial: " + problemDescription,
+        usuario: "Usuário Web", // Troque pelo nome do usuário logado!
+        status: "Aberto",
+        prioridade: "Média", 
+        // Adicione outras propriedades que seu Back-end precisa
+    };
+
+    try {
+        const response = await fetch(CREATE_TICKET_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(novoChamado)
+        });
+
+        if (!response.ok) {
+            throw new Error('Falha ao criar chamado no back-end.');
+        }
+
+        // Se a criação for bem-sucedida, a função central que busca e renderiza TUDO
+        fetchChamados(); 
+        return true;
+
+    } catch (error) {
+        console.error("Erro ao criar chamado:", error);
+        adicionarMensagem("🚨 Erro: Não foi possível registrar o chamado. Tente novamente.", 'bot');
+        return false;
+    }
+}
+
+// === Botão "Chamar Técnico" (Versão Dinâmica) ===
 callTechBtn.onclick = () => {
   adicionarMensagem("Chamando um técnico humano...", 'bot');
   callTechBtn.style.display = 'none';
-  // SIMULA CRIAÇÃO DO CHAMADO NO BACK-END AQUI
-  // Ex: createTicketAPI({ tipo: "Chamado Humano" }).then(fetchChamados); 
-  setTimeout(() => {
-    adicionarMensagem("👨‍🔧 Um técnico foi acionado e entrará em contato em instantes.", 'bot');
+  
+  // Captura o último texto digitado pelo usuário
+  const userMessages = Array.from(chatBody.querySelectorAll('.message.user'));
+  const lastUserMessage = userMessages.length > 0 ? userMessages[userMessages.length - 1].textContent : "Problema não detalhado via chat.";
+
+  setTimeout(async () => {
+      const success = await createTicketAPI(lastUserMessage);
+      if (success) {
+          adicionarMensagem("✅ Chamado registrado! Um técnico foi acionado e entrará em contato.", 'bot');
+          setTimeout(() => { modal.style.display = 'none'; }, 3000); 
+      }
   }, 2000);
 };
 
@@ -124,8 +168,7 @@ function renderAllViews() {
 
 // FUNÇÃO CENTRAL DE BUSCA DE DADOS (Conexão com Back-end)
 async function fetchChamados() {
-    // 1. URL DO SEU BACK-END! MUDAR AQUI:
-    const API_URL = 'http://localhost:3000/api/chamados'; 
+    const API_URL = 'http://localhost:3000/api/chamados'; // <--- MUDAR PARA SUA URL REAL!
 
     try {
         const response = await fetch(API_URL);
@@ -133,22 +176,22 @@ async function fetchChamados() {
             throw new Error(`Erro de rede: status ${response.status}`);
         }
         
-        chamados = await response.json(); 
+        // Popula a variável global 'chamados'
+        let fetchedData = await response.json(); 
         
-        // 2. Garante que os campos necessários para o filtro existam
-        // e harmoniza a prioridade para minuscula
-        chamados = chamados.map(c => ({
+        // Garante a consistência dos dados para o front-end (chaves minúsculas)
+        chamados = fetchedData.map(c => ({
             ...c,
             prioridade: c.prioridade ? c.prioridade.toLowerCase() : 'baixa',
             status: c.status ? c.status : 'Aberto',
-            finalizado: c.finalizado === true // Garante que seja boolean
+            finalizado: c.finalizado === true 
         }));
 
         renderAllViews(); 
 
     } catch (error) {
         console.error("Erro ao buscar dados do back-end. Renderizando estado vazio.", error);
-        chamados = []; // Garante o estado vazio (renderização condicional)
+        chamados = []; 
         renderAllViews(); 
     }
 }
@@ -158,7 +201,6 @@ async function fetchChamados() {
 // RENDERIZAÇÃO DO DASHBOARD (Cards e Lista Recente)
 // =========================================================================
 
-// tiickets do dashboard
 function updateDashboardStats(allChamados) {
     const total = allChamados.length;
     const abertos = allChamados.filter(c => c.status && c.status.toLowerCase().includes('aberto')).length;
@@ -186,11 +228,13 @@ function renderDashboardTickets(tickets) {
 
   } else {
     // LOOP (FOR EACH)
-    tickets.forEach((t) => {
+    // Filtra apenas os 5 últimos se necessário
+    const recentTickets = tickets.slice(0, 5); 
+
+    recentTickets.forEach((t) => {
       const li = document.createElement("li");
       li.classList.add("ticket");
 
-      // Usando as propriedades harmonizadas: titulo, usuario, prioridade
       const statusClass = t.status.toLowerCase().replace(" ", "");
       const priorityClass = t.prioridade.toLowerCase(); 
 
@@ -213,7 +257,6 @@ function renderDashboardTickets(tickets) {
 // RENDERIZAÇÃO DA PÁGINA CHAMADOS (Filtros e Cards)
 // =========================================================================
 
-// Função para renderizar chamados
 function renderChamados(lista) {
   listaChamados.innerHTML = "";
 
@@ -223,7 +266,15 @@ function renderChamados(lista) {
     const li = document.createElement("li");
     li.classList.add("chamado-card");
 
-    // ... (restante do seu código de criação do card) ...
+    // Estrutura do card
+    const article = document.createElement("article");
+
+    const header = document.createElement("header");
+    header.classList.add("chamado-header");
+    const h3 = document.createElement("h3");
+    h3.textContent = `${c.id} - ${c.titulo}`;
+    const badgesDiv = document.createElement("div");
+    badgesDiv.classList.add("badges");
 
     const statusSpan = document.createElement("span");
     statusSpan.classList.add("badge", c.status.toLowerCase().replace(" ", ""));
@@ -233,20 +284,81 @@ function renderChamados(lista) {
     prioridadeSpan.classList.add("badge", c.prioridade.toLowerCase());
     prioridadeSpan.textContent = c.prioridade;
 
-    // ... (continua a construção do card) ...
-    
+    badgesDiv.appendChild(statusSpan);
+    badgesDiv.appendChild(prioridadeSpan);
+    header.appendChild(h3);
+    header.appendChild(badgesDiv);
+    article.appendChild(header);
+
+    const pDesc = document.createElement("p");
+    pDesc.textContent = c.descricao;
+    article.appendChild(pDesc);
+
+    const infoDiv = document.createElement("div");
+    infoDiv.classList.add("chamado-info");
+    infoDiv.innerHTML = `👤 ${c.usuario} | 📅 ${c.data} | ⏱️ ${c.dias || '-'} dias`;
+    article.appendChild(infoDiv);
+
+    const sugestaoSec = document.createElement("section");
+    sugestaoSec.classList.add("sugestao-ia");
+    sugestaoSec.innerHTML = `<strong>💡 Sugestão da IA:</strong> ${c.sugestao || 'Nenhuma'}`;
+    article.appendChild(sugestaoSec);
+
+    li.appendChild(article);
+
+
+    // Ações 
+    const aside = document.createElement("aside");
+    aside.classList.add("chamado-acoes");
+
+    // Select Status
+    const selectStatus = document.createElement("select");
+    selectStatus.classList.add("alterar-status");
+    ["Aberto", "Em Andamento", "Resolvido"].forEach(status => {
+      const option = document.createElement("option");
+      option.value = status;
+      option.textContent = status;
+      if (c.status === status) option.selected = true;
+      selectStatus.appendChild(option);
+    });
+    selectStatus.addEventListener("change", e => {
+      // Simulação: Chame a API para mudar o status e então fetchChamados()
+      c.status = e.target.value;
+      renderAllViews(); 
+    });
+    aside.appendChild(selectStatus);
+
+    // Select Técnico
+    const selectTecnico = document.createElement("select");
+    selectTecnico.classList.add("atribuir-tecnico");
+    const opcaoVazia = document.createElement("option");
+    opcaoVazia.textContent = c.tecnico || "Atribuir técnico";
+    selectTecnico.appendChild(opcaoVazia);
+    ["João Tech", "Carlos Tech", "Roberto Support"].forEach(tecnico => {
+      const option = document.createElement("option");
+      option.value = tecnico;
+      option.textContent = tecnico;
+      selectTecnico.appendChild(option);
+    });
+    selectTecnico.addEventListener("change", e => {
+      // Simulação: Chame a API para atribuir o técnico e então fetchChamados()
+      c.tecnico = e.target.value;
+      renderAllViews();
+    });
+    aside.appendChild(selectTecnico);
+
     // Botão Finalizar
     const btnFinalizar = document.createElement("button");
     btnFinalizar.textContent = "✅ Finalizar";
     btnFinalizar.addEventListener("click", () => {
-        // Ação: Chamar a API de alteração de status e depois buscar os dados novamente
-        // Ex: updateChamadoAPI(c.id, { finalizado: true }).then(fetchChamados);
-        
-        // Simulação:
-        c.finalizado = true;
-        renderAllViews(); 
+      // Simulação: Chame a API para finalizar o chamado e então fetchChamados()
+      c.finalizado = true;
+      renderAllViews();
     });
-    // ... (fim do card) ...
+    aside.appendChild(btnFinalizar);
+
+    li.appendChild(aside);
+
     listaChamados.appendChild(li);
   });
 }
@@ -268,8 +380,7 @@ function filtrarChamados() {
 
 // Eventos de filtro e busca
 [busca, filtroStatus, filtroPrioridade, filtroCategoria].forEach(el => {
-  // Chamamos renderChamados diretamente para a UX mais rápida de filtro
-  el.addEventListener("input", () => renderChamados(filtrarChamados())); 
+  el.addEventListener("input", () => renderChamados(filtrarChamados()));
 });
 
 // =========================================================================
@@ -311,7 +422,7 @@ function renderTecnicos() {
 // CHAMADA INICIAL E EVENTOS GLOBAIS
 // =========================================================================
 
-// Eventos de IA (mantidos)
+// Eventos de IA e Navegação (mantidos)
 document.addEventListener('DOMContentLoaded', () => {
   const badges = document.querySelectorAll('.badge-ia');
 
@@ -324,11 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
       button.textContent = newState === 'active' ? 'Ativo' : 'Em Teste';
     });
   });
-});
 
-
-document.addEventListener('DOMContentLoaded', () => {
-  // ... Código do menu toggle e tabs (mantidos) ...
   const toggle = document.getElementById('menuToggle');
   const menu = document.getElementById('menu');
 
@@ -359,6 +466,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   
-  // A única chamada de renderização inicial:
+  // A chamada que inicia todo o fluxo dinâmico:
   fetchChamados();
 });
