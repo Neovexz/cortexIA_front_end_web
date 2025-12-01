@@ -1,4 +1,11 @@
-// MODAL PARA CRIAR CHAMADO
+// A LISTA CENTRAL DE DADOS
+// Esta variável será a fonte da verdade para todo o seu front-end.
+// Ela será populada pelo Back-end via fetch.
+let chamados = []; 
+
+// =========================================================================
+// VARIÁVEIS DO DOM E CONSTANTES
+// =========================================================================
 const btnNovoChamado = document.getElementById('btnNovoChamado');
 const modal = document.getElementById('chatModal');
 const closeBtn = document.getElementById('closeChat');
@@ -7,12 +14,33 @@ const sendBtn = document.getElementById('sendBtn');
 const callTechBtn = document.getElementById('callTechBtn');
 const userInput = document.getElementById('userInput');
 
+// Variáveis do DOM da Página Chamados
+const ticketList = document.getElementById("ticketList");
+const ticketsContainer = document.querySelector('.tickets');
+const listaChamados = document.getElementById("listaChamados");
+const busca = document.getElementById("busca");
+const filtroStatus = document.getElementById("filtroStatus");
+const filtroPrioridade = document.getElementById("filtroPrioridade");
+const filtroCategoria = document.getElementById("filtroCategoria");
+const cardsTecnicos = document.getElementById("cardsTecnicos");
+
+const tecnicos = [
+    { nome: "Carlos Tech" },
+    { nome: "João Tech" },
+    { nome: "Roberto Support" },
+];
+
 const respostasIA = {
   "internet": "Parece um problema de conexão. Já tentou reiniciar o roteador?",
   "computador": "Você pode detalhar o problema do computador? Travamentos, lentidão ou erro específico?",
   "impressora": "Verifique se a impressora está ligada e conectada corretamente.",
   "login": "Tente redefinir sua senha clicando em 'Esqueci minha senha'."
 };
+
+
+// =========================================================================
+// FUNÇÕES DE UTILIDADE E CHATBOT
+// =========================================================================
 
 // === Abrir / Fechar modal ===
 btnNovoChamado.onclick = () => modal.style.display = 'flex';
@@ -44,8 +72,6 @@ function adicionarMensagem(texto, tipo) {
 // === IA responde com animação de digitando ===
 function respostaIA(texto) {
   let resposta = null;
-
-  // Oculta o botão do técnico a cada nova mensagem
   callTechBtn.style.display = 'none';
 
   for (let chave in respostasIA) {
@@ -55,14 +81,12 @@ function respostaIA(texto) {
     }
   }
 
-  // Cria indicador de "digitando..."
   const typing = document.createElement('div');
   typing.classList.add('typing');
   typing.innerHTML = '<span></span><span></span><span></span>';
   chatBody.appendChild(typing);
   chatBody.scrollTop = chatBody.scrollHeight;
 
-  // Depois de 1.2s remove o typing e mostra a resposta
   setTimeout(() => {
     chatBody.removeChild(typing);
 
@@ -75,145 +99,169 @@ function respostaIA(texto) {
   }, 1200);
 }
 
-// === Botão "Chamar Técnico" ===
+// SIMULA CRIAÇÃO DO CHAMADO NO BACK-END
+async function createTicketAPI(problemDescription) {
+    // 1. URL DA SUA API PARA CRIAR UM CHAMADO (POST)
+    const CREATE_TICKET_URL = 'http://localhost:3000/api/chamados/criar'; 
+
+    const novoChamado = {
+        titulo: problemDescription.length > 50 ? problemDescription.substring(0, 50) + "..." : problemDescription,
+        descricao: "Chamado gerado via Chatbot. Descrição inicial: " + problemDescription,
+        usuario: "Usuário Web", // Troque pelo nome do usuário logado!
+        status: "Aberto",
+        prioridade: "Média", 
+        // Adicione outras propriedades que seu Back-end precisa
+    };
+
+    try {
+        const response = await fetch(CREATE_TICKET_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(novoChamado)
+        });
+
+        if (!response.ok) {
+            throw new Error('Falha ao criar chamado no back-end.');
+        }
+
+        // Se a criação for bem-sucedida, a função central que busca e renderiza TUDO
+        fetchChamados(); 
+        return true;
+
+    } catch (error) {
+        console.error("Erro ao criar chamado:", error);
+        adicionarMensagem("🚨 Erro: Não foi possível registrar o chamado. Tente novamente.", 'bot');
+        return false;
+    }
+}
+
+// === Botão "Chamar Técnico" (Versão Dinâmica) ===
 callTechBtn.onclick = () => {
   adicionarMensagem("Chamando um técnico humano...", 'bot');
   callTechBtn.style.display = 'none';
-  setTimeout(() => {
-    adicionarMensagem("👨‍🔧 Um técnico foi acionado e entrará em contato em instantes.", 'bot');
+  
+  // Captura o último texto digitado pelo usuário
+  const userMessages = Array.from(chatBody.querySelectorAll('.message.user'));
+  const lastUserMessage = userMessages.length > 0 ? userMessages[userMessages.length - 1].textContent : "Problema não detalhado via chat.";
+
+  setTimeout(async () => {
+      const success = await createTicketAPI(lastUserMessage);
+      if (success) {
+          adicionarMensagem("✅ Chamado registrado! Um técnico foi acionado e entrará em contato.", 'bot');
+          setTimeout(() => { modal.style.display = 'none'; }, 3000); 
+      }
   }, 2000);
 };
 
 
-// batao de navegacao do menu hamburguer
+// =========================================================================
+// FLUXO PRINCIPAL DE DADOS (Fetch e Renderização)
+// =========================================================================
 
-document.addEventListener('DOMContentLoaded', () => {
-  const toggle = document.getElementById('menuToggle');
-  const menu = document.getElementById('menu');
+// Função que chama todas as renderizações após um evento (fetch, filtro, mudança)
+function renderAllViews() {
+    updateDashboardStats(chamados);
+    renderDashboardTickets(chamados); 
+    renderChamados(filtrarChamados()); 
+    renderTecnicos(); 
+}
 
-  if (!toggle || !menu) return;
+// FUNÇÃO CENTRAL DE BUSCA DE DADOS (Conexão com Back-end)
+async function fetchChamados() {
+    const API_URL = 'http://localhost:3000/api/chamados'; // <--- MUDAR PARA SUA URL REAL!
 
-  toggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    menu.classList.toggle('show');
-  });
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+            throw new Error(`Erro de rede: status ${response.status}`);
+        }
+        
+        // Popula a variável global 'chamados'
+        let fetchedData = await response.json(); 
+        
+        // Garante a consistência dos dados para o front-end (chaves minúsculas)
+        chamados = fetchedData.map(c => ({
+            ...c,
+            prioridade: c.prioridade ? c.prioridade.toLowerCase() : 'baixa',
+            status: c.status ? c.status : 'Aberto',
+            finalizado: c.finalizado === true 
+        }));
 
-  document.addEventListener('click', (e) => {
-    if (!menu.contains(e.target) && !toggle.contains(e.target)) {
-      menu.classList.remove('show');
+        renderAllViews(); 
+
+    } catch (error) {
+        console.error("Erro ao buscar dados do back-end. Renderizando estado vazio.", error);
+        chamados = []; 
+        renderAllViews(); 
     }
-  });
-});
+}
 
-// tabs de navegacao entre secoes
 
-document.addEventListener("DOMContentLoaded", () => {
-  const buttons = document.querySelectorAll(".nav__button");
-  const sections = document.querySelectorAll(".section");
+// =========================================================================
+// RENDERIZAÇÃO DO DASHBOARD (Cards e Lista Recente)
+// =========================================================================
 
-  buttons.forEach(button => {
-    button.addEventListener("click", () => {
-      // Atualiza o botão ativo
-      buttons.forEach(b => b.classList.remove("active"));
-      button.classList.add("active");
+function updateDashboardStats(allChamados) {
+    const total = allChamados.length;
+    const abertos = allChamados.filter(c => c.status && c.status.toLowerCase().includes('aberto')).length;
+    const emAndamento = allChamados.filter(c => c.status && c.status.toLowerCase().includes('andamento')).length;
+    const resolvidos = allChamados.filter(c => c.status && c.status.toLowerCase().includes('resolvido')).length;
 
-      // Mostra a seção correspondente
-      const target = button.dataset.section;
-      sections.forEach(section => {
-        section.classList.toggle("active", section.id === target);
-      });
+    document.getElementById('total').textContent = total;
+    document.getElementById('abertos').textContent = abertos;
+    document.getElementById('andamento').textContent = emAndamento;
+    document.getElementById('resolvidos').textContent = resolvidos;
+}
+
+function renderDashboardTickets(tickets) {
+  ticketList.innerHTML = ""; 
+  const oldEmptyMessage = ticketsContainer.querySelector('.empty-state-dashboard');
+  if (oldEmptyMessage) oldEmptyMessage.remove();
+
+  // RENDERIZAÇÃO CONDICIONAL
+  if (tickets.length === 0) {
+    const emptyMessage = document.createElement('div');
+    emptyMessage.classList.add('empty-state-dashboard');
+    emptyMessage.innerHTML = '<h4>Nenhum chamado recente criado.</h4><p>Comece clicando em "➕ Criar Novo Chamado".</p>';
+    const header = ticketsContainer.querySelector('.tickets-header');
+    ticketsContainer.insertBefore(emptyMessage, header.nextSibling);
+
+  } else {
+    // LOOP (FOR EACH)
+    // Filtra apenas os 5 últimos se necessário
+    const recentTickets = tickets.slice(0, 5); 
+
+    recentTickets.forEach((t) => {
+      const li = document.createElement("li");
+      li.classList.add("ticket");
+
+      const statusClass = t.status.toLowerCase().replace(" ", "");
+      const priorityClass = t.prioridade.toLowerCase(); 
+
+      li.innerHTML = `
+        <div>
+          <strong>${t.id} - ${t.titulo}</strong><br> 
+          <small>${t.usuario}</small>               
+        </div>
+        <div class="ticket-badges">
+          <span class="badge ${statusClass}">${t.status}</span>
+          <span class="badge ${priorityClass}">${t.prioridade}</span>
+        </div>
+      `;
+      ticketList.appendChild(li);
     });
-  });
-});
+  }
+}
 
+// =========================================================================
+// RENDERIZAÇÃO DA PÁGINA CHAMADOS (Filtros e Cards)
+// =========================================================================
 
-// tiickets do dashboard
-
-
-const tickets = [
-  {
-    id: "#001",
-    title: "Internet connection issue",
-    user: "João Silva",
-    status: "Aberto",
-    priority: "Alto",
-  },
-  {
-    id: "#002",
-    title: "Excel won't open after update",
-    user: "Maria Santos",
-    status: "Em Andamento",
-    priority: "Medio",
-  },
-  {
-    id: "#003",
-    title: "Printer not printing",
-    user: "Pedro Costa",
-    status: "Resolvido",
-    priority: "Baixo",
-  },
-  {
-    id: "#004",
-    title: "Email not syncing",
-    user: "Ana Oliveira",
-    status: "Aberto",
-    priority: "Medio",
-  },
-  {
-    id: "#005",
-    title: "Monitor flickering screen",
-    user: "Roberto Lima",
-    status: "Em Andamento",
-    priority: "Alto",
-  },
-];
-
-const ticketList = document.getElementById("ticketList");
-
-tickets.forEach((t) => {
-  const li = document.createElement("li");
-  li.classList.add("ticket");
-
-  const statusClass = t.status
-    .toLowerCase()
-    .replace(" ", "");
-
-  const priorityClass = t.priority.toLowerCase();
-
-  li.innerHTML = `
-    <div>
-      <strong>${t.id} - ${t.title}</strong><br>
-      <small>${t.user}</small>
-    </div>
-    <div class="ticket-badges">
-      <span class="badge ${statusClass.includes("progress") ? "progress" : statusClass}">${t.status}</span>
-      <span class="badge ${priorityClass}">${t.priority}</span>
-    </div>
-  `;
-
-  ticketList.appendChild(li);
-});
-
-// chamados 
-
-const chamados = [
-  { id: "#001", titulo: "Problema de conexão", descricao: "Não consigo acessar a internet", usuario: "João Silva", data: "15/01/2024, 09:00", dias: 632, status: "Aberto", prioridade: "Alta", categoria: "Rede", tecnico: "", sugestao: "Verificar rede", finalizado: false },
-  { id: "#002", titulo: "Excel não abre", descricao: "Erro após atualização", usuario: "Maria Santos", data: "14/01/2024, 14:30", dias: 633, status: "Em Andamento", prioridade: "Média", categoria: "Software", tecnico: "Carlos Tech", sugestao: "Reinstalar Office", finalizado: false },
-  { id: "#003", titulo: "Monitor piscando", descricao: "Apresenta piscadas constantes", usuario: "Pedro Costa", data: "13/01/2024, 10:00", dias: 640, status: "Resolvido", prioridade: "Baixa", categoria: "Hardware", tecnico: "João Tech", sugestao: "Verificar cabo de vídeo", finalizado: false }
-];
-
-const listaChamados = document.getElementById("listaChamados");
-const busca = document.getElementById("busca");
-const filtroStatus = document.getElementById("filtroStatus");
-const filtroPrioridade = document.getElementById("filtroPrioridade");
-const filtroCategoria = document.getElementById("filtroCategoria");
-
-// Função para renderizar chamados
 function renderChamados(lista) {
   listaChamados.innerHTML = "";
 
   lista.forEach(c => {
-    if (c.finalizado) return; // Não renderiza finalizados
+    if (c.finalizado) return;
 
     const li = document.createElement("li");
     li.classList.add("chamado-card");
@@ -248,19 +296,18 @@ function renderChamados(lista) {
 
     const infoDiv = document.createElement("div");
     infoDiv.classList.add("chamado-info");
-    infoDiv.innerHTML = `👤 ${c.usuario} | 📅 ${c.data} | ⏱️ ${c.dias} dias`;
+    infoDiv.innerHTML = `👤 ${c.usuario} | 📅 ${c.data} | ⏱️ ${c.dias || '-'} dias`;
     article.appendChild(infoDiv);
 
     const sugestaoSec = document.createElement("section");
     sugestaoSec.classList.add("sugestao-ia");
-    sugestaoSec.innerHTML = `<strong>💡 Sugestão da IA:</strong> ${c.sugestao}`;
+    sugestaoSec.innerHTML = `<strong>💡 Sugestão da IA:</strong> ${c.sugestao || 'Nenhuma'}`;
     article.appendChild(sugestaoSec);
 
     li.appendChild(article);
 
 
     // Ações 
-
     const aside = document.createElement("aside");
     aside.classList.add("chamado-acoes");
 
@@ -275,8 +322,9 @@ function renderChamados(lista) {
       selectStatus.appendChild(option);
     });
     selectStatus.addEventListener("change", e => {
+      // Simulação: Chame a API para mudar o status e então fetchChamados()
       c.status = e.target.value;
-      renderChamados(filtrarChamados());
+      renderAllViews(); 
     });
     aside.appendChild(selectStatus);
 
@@ -293,8 +341,9 @@ function renderChamados(lista) {
       selectTecnico.appendChild(option);
     });
     selectTecnico.addEventListener("change", e => {
+      // Simulação: Chame a API para atribuir o técnico e então fetchChamados()
       c.tecnico = e.target.value;
-      renderChamados(filtrarChamados());
+      renderAllViews();
     });
     aside.appendChild(selectTecnico);
 
@@ -302,8 +351,9 @@ function renderChamados(lista) {
     const btnFinalizar = document.createElement("button");
     btnFinalizar.textContent = "✅ Finalizar";
     btnFinalizar.addEventListener("click", () => {
+      // Simulação: Chame a API para finalizar o chamado e então fetchChamados()
       c.finalizado = true;
-      renderChamados(filtrarChamados());
+      renderAllViews();
     });
     aside.appendChild(btnFinalizar);
 
@@ -313,19 +363,19 @@ function renderChamados(lista) {
   });
 }
 
-// Função para filtrar chamados
+// Função para filtrar chamados (USANDO A VARIÁVEL GLOBAL 'chamados')
 function filtrarChamados() {
-  const texto = busca.value.toLowerCase();
-  return chamados.filter(c =>
-    !c.finalizado &&
-    (c.titulo.toLowerCase().includes(texto) ||
-      c.id.toLowerCase().includes(texto) ||
-      c.usuario.toLowerCase().includes(texto) ||
-      c.descricao.toLowerCase().includes(texto)) &&
-    (filtroStatus.value === "" || c.status === filtroStatus.value) &&
-    (filtroPrioridade.value === "" || c.prioridade === filtroPrioridade.value) &&
-    (filtroCategoria.value === "" || c.categoria === filtroCategoria.value)
-  );
+    const texto = busca.value.toLowerCase();
+    return chamados.filter(c =>
+        !c.finalizado &&
+        (c.titulo && c.titulo.toLowerCase().includes(texto) ||
+          c.id && c.id.toLowerCase().includes(texto) ||
+          c.usuario && c.usuario.toLowerCase().includes(texto) ||
+          c.descricao && c.descricao.toLowerCase().includes(texto)) &&
+        (filtroStatus.value === "" || c.status === filtroStatus.value) &&
+        (filtroPrioridade.value === "" || c.prioridade.toLowerCase() === filtroPrioridade.value.toLowerCase()) &&
+        (filtroCategoria.value === "" || c.categoria === filtroCategoria.value)
+    );
 }
 
 // Eventos de filtro e busca
@@ -333,17 +383,9 @@ function filtrarChamados() {
   el.addEventListener("input", () => renderChamados(filtrarChamados()));
 });
 
-// Render inicial
-renderChamados(chamados);
-
-
-const tecnicos = [
-  { nome: "Carlos Tech" },
-  { nome: "João Tech" },
-  { nome: "Roberto Support" },
-];
-
-const cardsTecnicos = document.getElementById("cardsTecnicos");
+// =========================================================================
+// RENDERIZAÇÃO DA PÁGINA TÉCNICOS
+// =========================================================================
 
 function contarChamadosPorTecnico(nomeTecnico) {
   const emAndamento = chamados.filter(c => c.tecnico === nomeTecnico && c.status === "Em Andamento").length;
@@ -375,18 +417,12 @@ function renderTecnicos() {
   });
 }
 
-// Atualiza painel de técnicos sempre que os chamados forem renderizados
-const renderChamadosOriginal = renderChamados;
-renderChamados = function (lista) {
-  renderChamadosOriginal(lista);
-  renderTecnicos();
-};
 
-// Render inicial dos técnicos
-renderTecnicos();
+// =========================================================================
+// CHAMADA INICIAL E EVENTOS GLOBAIS
+// =========================================================================
 
-// ia
-
+// Eventos de IA e Navegação (mantidos)
 document.addEventListener('DOMContentLoaded', () => {
   const badges = document.querySelectorAll('.badge-ia');
 
@@ -399,6 +435,37 @@ document.addEventListener('DOMContentLoaded', () => {
       button.textContent = newState === 'active' ? 'Ativo' : 'Em Teste';
     });
   });
+
+  const toggle = document.getElementById('menuToggle');
+  const menu = document.getElementById('menu');
+
+  if (toggle && menu) {
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menu.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+        menu.classList.remove('show');
+      }
+    });
+  }
+
+  const buttons = document.querySelectorAll(".nav__button");
+  const sections = document.querySelectorAll(".section");
+
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+      buttons.forEach(b => b.classList.remove("active"));
+      button.classList.add("active");
+      const target = button.dataset.section;
+      sections.forEach(section => {
+        section.classList.toggle("active", section.id === target);
+      });
+    });
+  });
+  
+  // A chamada que inicia todo o fluxo dinâmico:
+  fetchChamados();
 });
-
-
